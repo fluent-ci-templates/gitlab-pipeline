@@ -1,7 +1,7 @@
 import { JobSpec, Workflow } from "fluent_github_actions";
 
 export function generateYaml(): Workflow {
-  const workflow = new Workflow("base");
+  const workflow = new Workflow("release");
 
   const push = {
     branches: ["main"],
@@ -21,7 +21,7 @@ export function generateYaml(): Workflow {
       {
         uses: "denoland/setup-deno@v1",
         with: {
-          "deno-version": "v1.36",
+          "deno-version": "v1.37",
         },
       },
       {
