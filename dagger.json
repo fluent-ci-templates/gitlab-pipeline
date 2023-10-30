@@ -1,0 +1,5 @@
+{
+  "root": "",
+  "name": "gitlab",
+  "sdkRuntime": "tsiry/dagger-sdk-deno"
+}
