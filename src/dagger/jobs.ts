@@ -22,7 +22,7 @@ export const releaseUpload = async (
       .from("pkgxdev/pkgx:latest")
       .withExec(["apt-get", "update"])
       .withExec(["apt-get", "install", "-y", "ca-certificates"])
-      .withExec(["pkgx", "install", "glab"])
+      .withExec(["pkgx", "install", "glab", "git"])
       .withMountedCache("/assets", client.cacheVolume("gl-release-assets"))
       .withDirectory("/app", context)
       .withWorkdir("/app")
