@@ -1,7 +1,7 @@
 # Circle CI
 
-[![fluentci pipeline](https://img.shields.io/badge/dynamic/json?label=pkg.fluentci.io&labelColor=%23000&color=%23460cf1&url=https%3A%2F%2Fapi.fluentci.io%2Fv1%2Fpipeline%2Fbase_pipeline&query=%24.version)](https://pkg.fluentci.io/base_pipeline)
-![deno compatibility](https://shield.deno.dev/deno/^1.34)
+[![fluentci pipeline](https://img.shields.io/badge/dynamic/json?label=pkg.fluentci.io&labelColor=%23000&color=%23460cf1&url=https%3A%2F%2Fapi.fluentci.io%2Fv1%2Fpipeline%2Fgitlab_pipeline&query=%24.version)](https://pkg.fluentci.io/gitlab_pipeline)
+![deno compatibility](https://shield.deno.dev/deno/^1.37)
 
 
 The following command will generate a `.circleci/config.yml` file in your project:
