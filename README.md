@@ -18,6 +18,8 @@ fluentci run gitlab_pipeline
 
 | Variable              | Description                   |
 |-----------------------|-------------------------------|
+| TAG                   | Git tag to upload to          |
+| FILE                  | File to upload                |
 | GITLAB_ACCESS_TOKEN   | Gitlab Access Token           |
 
 
