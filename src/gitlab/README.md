@@ -31,7 +31,7 @@ Generated file:
   before_script:
     - apk add docker-cli curl unzip
     - deno install -A -r https://cli.fluentci.io -n fluentci
-    - curl -L https://dl.dagger.io/dagger/install.sh | DAGGER_VERSION=0.8.1 sh
+    - curl -L https://dl.dagger.io/dagger/install.sh | DAGGER_VERSION=0.8.8 sh
     - mv bin/dagger /usr/local/bin
     - dagger version
 

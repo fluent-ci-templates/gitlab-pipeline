@@ -26,12 +26,12 @@ jobs:
       - uses: actions/checkout@v3
       - uses: denoland/setup-deno@v1
         with:
-          deno-version: v1.36
+          deno-version: v1.37
       - name: Setup Fluent CI CLI
         run: deno install -A -r https://cli.fluentci.io -n fluentci
       - name: Setup Dagger
         run: |
-            curl -L https://dl.dagger.io/dagger/install.sh | DAGGER_VERSION=0.8.1 sh
+            curl -L https://dl.dagger.io/dagger/install.sh | DAGGER_VERSION=0.8.8 sh
             sudo mv bin/dagger /usr/local/bin
             dagger version
       - name: Run Dagger Pipelines
