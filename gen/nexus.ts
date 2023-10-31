@@ -43,18 +43,25 @@ export type NexusGenAllTypes = NexusGenRootTypes & NexusGenScalars
 
 export interface NexusGenFieldTypes {
   Query: { // field return type
+    releaseCreate: string | null; // String
     releaseUpload: string | null; // String
   }
 }
 
 export interface NexusGenFieldTypeNames {
   Query: { // field return type name
+    releaseCreate: 'String'
     releaseUpload: 'String'
   }
 }
 
 export interface NexusGenArgTypes {
   Query: {
+    releaseCreate: { // args
+      src: string; // String!
+      tag: string; // String!
+      token: string; // String!
+    }
     releaseUpload: { // args
       file: string; // String!
       src: string; // String!

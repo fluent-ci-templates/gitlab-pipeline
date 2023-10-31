@@ -27,9 +27,12 @@ fluentci run gitlab_pipeline
 
 | Job            | Description                                                |
 |----------------|------------------------------------------------------------|
+| release_create | Creates a gitlab release                                   |
 | release_upload | Uploads a file to a gitlab release                         |
 
 ```graphql
+    releaseCreate(src: String!, tag: String!, token: String!): String
+
     releaseUpload(
         file: String!, 
         src: String!, 
@@ -43,7 +46,12 @@ fluentci run gitlab_pipeline
 You can also use this pipeline programmatically:
 
 ```typescript
-import { releaseUpload } from "https://pkg.fluentci.io/gitlab_pipeline@v0.1.0/mod.ts";
+import { releaseCreate, releaseUpload } from "https://pkg.fluentci.io/gitlab_pipeline@v0.1.0/mod.ts";
 
+await releaseCreate();
 await releaseUpload();
 ```
+
+## 📚 Examples
+
+See [tsiry.sndr/gitlab-release-demo](https://gitlab.com/tsiry.sndr/gitlab-release-demo) for a working example.

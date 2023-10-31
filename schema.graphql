@@ -3,5 +3,6 @@
 
 
 type Query {
+  releaseCreate(src: String!, tag: String!, token: String!): String
   releaseUpload(file: String!, src: String!, tag: String!, token: String!): String
 }

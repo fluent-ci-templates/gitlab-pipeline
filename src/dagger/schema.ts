@@ -8,10 +8,19 @@ import {
   nonNull,
 } from "../../deps.ts";
 
-import { releaseUpload } from "./jobs.ts";
+import { releaseCreate, releaseUpload } from "./jobs.ts";
 
 const Query = queryType({
   definition(t) {
+    t.string("releaseCreate", {
+      args: {
+        src: nonNull(stringArg()),
+        token: nonNull(stringArg()),
+        tag: nonNull(stringArg()),
+      },
+      resolve: async (_root, args, _ctx) =>
+        await releaseCreate(args.src, args.token, args.tag),
+    });
     t.string("releaseUpload", {
       args: {
         src: nonNull(stringArg()),
