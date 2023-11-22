@@ -1,6 +1,6 @@
-import Client from "../../deps.ts";
+import Client, { Secret } from "../../deps.ts";
 import { connect } from "../../sdk/connect.ts";
-import { getDirectory } from "./lib.ts";
+import { getDirectory, getGitlabToken } from "./lib.ts";
 
 export enum Job {
   releaseUpload = "release_upload",
@@ -11,12 +11,17 @@ export const exclude = [];
 
 export const releaseCreate = async (
   src = ".",
-  token?: string,
+  token?: string | Secret,
   tag?: string
 ) => {
   await connect(async (client: Client) => {
     const TAG = Deno.env.get("TAG") || tag || "latest";
     const context = getDirectory(client, src);
+    const secret = getGitlabToken(client, token);
+    if (!secret) {
+      console.error("No Gitlab token found");
+      Deno.exit(1);
+    }
     const ctr = client
       .pipeline(Job.releaseCreate)
       .container()
@@ -27,13 +32,8 @@ export const releaseCreate = async (
       .withMountedCache("/assets", client.cacheVolume("gl-release-assets"))
       .withDirectory("/app", context)
       .withWorkdir("/app")
-      .withExec([
-        "glab",
-        "auth",
-        "login",
-        "--token",
-        Deno.env.get("GITLAB_ACCESS_TOKEN") || token!,
-      ])
+      .withSecretVariable("GITLAB_ACCESS_TOKEN", secret)
+      .withExec(["bash", "-c", "glab auth login --token $GITLAB_ACCESS_TOKEN"])
       .withExec(["glab", "release", "create", TAG]);
 
     await ctr.stdout();
