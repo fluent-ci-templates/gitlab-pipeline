@@ -45,7 +45,7 @@ const schema = makeSchema({
 schema.description = JSON.stringify({
   "releaseCreate.src": "directory",
   "releaseUpload.src": "directory",
-  "releaseCreate.token": "token",
+  "releaseCreate.token": "secret",
   "releaseUpload.token": "secret",
 });
 
