@@ -1,4 +1,4 @@
-import Client, { Secret } from "../../deps.ts";
+import Client, { Directory, Secret } from "../../deps.ts";
 import { connect } from "../../sdk/connect.ts";
 import { getDirectory, getGitlabToken } from "./lib.ts";
 
@@ -9,8 +9,15 @@ export enum Job {
 
 export const exclude = [];
 
+/**
+ * @function
+ * @description Create a Gitlab Release
+ * @param {string | Directory | undefined} src
+ * @param {string | Secret} token
+ * @returns {string}
+ */
 export const releaseCreate = async (
-  src = ".",
+  src: string | Directory | undefined = ".",
   token?: string | Secret,
   tag?: string
 ) => {
@@ -42,8 +49,15 @@ export const releaseCreate = async (
   return "Done";
 };
 
+/**
+ * @function
+ * @description Upload asset files to a Gitlab Release
+ * @param {string | Directory | undefined} src
+ * @param {string | Secret} token
+ * @returns {string}
+ */
 export const releaseUpload = async (
-  src = ".",
+  src: string | Directory | undefined = ".",
   token?: string,
   tag?: string,
   file?: string
