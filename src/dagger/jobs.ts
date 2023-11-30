@@ -16,11 +16,11 @@ export const exclude = [];
  * @param {string | Secret} token
  * @returns {string}
  */
-export const releaseCreate = async (
+export async function releaseCreate(
   src: string | Directory | undefined = ".",
   token?: string | Secret,
   tag?: string
-) => {
+): Promise<string> {
   await connect(async (client: Client) => {
     const TAG = Deno.env.get("TAG") || tag || "latest";
     const context = getDirectory(client, src);
@@ -47,7 +47,7 @@ export const releaseCreate = async (
   });
 
   return "Done";
-};
+}
 
 /**
  * @function
@@ -56,12 +56,12 @@ export const releaseCreate = async (
  * @param {string | Secret} token
  * @returns {string}
  */
-export const releaseUpload = async (
+export async function releaseUpload(
   src: string | Directory | undefined = ".",
   token?: string,
   tag?: string,
   file?: string
-) => {
+): Promise<string> {
   await connect(async (client: Client) => {
     const TAG = Deno.env.get("TAG") || tag || "latest";
     const FILE = Deno.env.get("FILE") || file!;
@@ -89,7 +89,7 @@ export const releaseUpload = async (
   });
 
   return "Done";
-};
+}
 
 export type JobExec = (
   src?: string,
