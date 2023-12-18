@@ -18,7 +18,7 @@ fluentci run gitlab_pipeline
 
 Use as a [Dagger](https://dagger.io) Module:
 
-````bash
+```bash
 dagger mod install github.com/fluent-ci-templates/gitlab-pipeline@mod
 ```
 
@@ -38,15 +38,19 @@ dagger mod install github.com/fluent-ci-templates/gitlab-pipeline@mod
 | release_create | Creates a gitlab release                                   |
 | release_upload | Uploads a file to a gitlab release                         |
 
-```graphql
-    releaseCreate(src: String!, tag: String!, token: String!): String
+```typescript
+ releaseCreate(
+    src: string | Directory | undefined = ".",
+    token?: string | Secret,
+    tag?: string
+ ): Promise<string>
 
-    releaseUpload(
-        file: String!, 
-        src: String!, 
-        tag: String!, 
-        token: String!
-    ): String
+ releaseUpload(
+    src: string | Directory | undefined = ".",
+    token?: string,
+    tag?: string,
+    file?: string
+ ): Promise<string>
 ```
 
 ## Programmatic usage
@@ -54,7 +58,7 @@ dagger mod install github.com/fluent-ci-templates/gitlab-pipeline@mod
 You can also use this pipeline programmatically:
 
 ```typescript
-import { releaseCreate, releaseUpload } from "https://pkg.fluentci.io/gitlab_pipeline@v0.2.0/mod.ts";
+import { releaseCreate, releaseUpload } from "https://pkg.fluentci.io/gitlab_pipeline@v0.3.0/mod.ts";
 
 await releaseCreate();
 await releaseUpload();
