@@ -58,7 +58,7 @@ dagger mod install github.com/fluent-ci-templates/gitlab-pipeline@mod
 You can also use this pipeline programmatically:
 
 ```typescript
-import { releaseCreate, releaseUpload } from "https://pkg.fluentci.io/gitlab_pipeline@v0.3.0/mod.ts";
+import { releaseCreate, releaseUpload } from "https://pkg.fluentci.io/gitlab_pipeline@v0.3.1/mod.ts";
 
 await releaseCreate();
 await releaseUpload();

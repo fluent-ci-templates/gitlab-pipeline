@@ -1,5 +1,4 @@
-import Client, { Directory, Secret } from "../../deps.ts";
-import { connect } from "../../sdk/connect.ts";
+import { Directory, Secret, dag } from "../../deps.ts";
 import { getDirectory, getGitlabToken } from "./lib.ts";
 
 export enum Job {
@@ -21,32 +20,30 @@ export async function releaseCreate(
   token?: string | Secret,
   tag?: string
 ): Promise<string> {
-  await connect(async (client: Client) => {
-    const TAG = Deno.env.get("TAG") || tag || "latest";
-    const context = getDirectory(client, src);
-    const secret = getGitlabToken(client, token);
-    if (!secret) {
-      console.error("No Gitlab token found");
-      Deno.exit(1);
-    }
-    const ctr = client
-      .pipeline(Job.releaseCreate)
-      .container()
-      .from("pkgxdev/pkgx:latest")
-      .withExec(["apt-get", "update"])
-      .withExec(["apt-get", "install", "-y", "ca-certificates"])
-      .withExec(["pkgx", "install", "glab", "git"])
-      .withMountedCache("/assets", client.cacheVolume("gl-release-assets"))
-      .withDirectory("/app", context)
-      .withWorkdir("/app")
-      .withSecretVariable("GITLAB_ACCESS_TOKEN", secret)
-      .withExec(["bash", "-c", "glab auth login --token $GITLAB_ACCESS_TOKEN"])
-      .withExec(["glab", "release", "create", TAG]);
+  const TAG = Deno.env.get("TAG") || tag || "latest";
+  const context = await getDirectory(dag, src);
+  const secret = await getGitlabToken(dag, token);
+  if (!secret) {
+    console.error("No Gitlab token found");
+    Deno.exit(1);
+  }
+  const ctr = dag
+    .pipeline(Job.releaseCreate)
+    .container()
+    .from("pkgxdev/pkgx:latest")
+    .withExec(["apt-get", "update"])
+    .withExec(["apt-get", "install", "-y", "ca-certificates"])
+    .withExec(["pkgx", "install", "glab", "git"])
+    .withMountedCache("/assets", dag.cacheVolume("gl-release-assets"))
+    .withDirectory("/app", context)
+    .withWorkdir("/app")
+    .withSecretVariable("GITLAB_ACCESS_TOKEN", secret)
+    .withExec(["bash", "-c", "glab auth login --token $GITLAB_ACCESS_TOKEN"])
+    .withExec(["glab", "release", "create", TAG]);
 
-    await ctr.stdout();
-  });
+  const result = await ctr.stdout();
 
-  return "Done";
+  return result;
 }
 
 /**
@@ -62,33 +59,31 @@ export async function releaseUpload(
   tag?: string,
   file?: string
 ): Promise<string> {
-  await connect(async (client: Client) => {
-    const TAG = Deno.env.get("TAG") || tag || "latest";
-    const FILE = Deno.env.get("FILE") || file!;
-    const context = getDirectory(client, src);
-    const ctr = client
-      .pipeline(Job.releaseUpload)
-      .container()
-      .from("pkgxdev/pkgx:latest")
-      .withExec(["apt-get", "update"])
-      .withExec(["apt-get", "install", "-y", "ca-certificates"])
-      .withExec(["pkgx", "install", "glab", "git"])
-      .withMountedCache("/assets", client.cacheVolume("gl-release-assets"))
-      .withDirectory("/app", context)
-      .withWorkdir("/app")
-      .withExec([
-        "glab",
-        "auth",
-        "login",
-        "--token",
-        Deno.env.get("GITLAB_ACCESS_TOKEN") || token!,
-      ])
-      .withExec(["glab", "release", "upload", TAG, FILE]);
+  const TAG = Deno.env.get("TAG") || tag || "latest";
+  const FILE = Deno.env.get("FILE") || file!;
+  const context = await getDirectory(dag, src);
+  const ctr = dag
+    .pipeline(Job.releaseUpload)
+    .container()
+    .from("pkgxdev/pkgx:latest")
+    .withExec(["apt-get", "update"])
+    .withExec(["apt-get", "install", "-y", "ca-certificates"])
+    .withExec(["pkgx", "install", "glab", "git"])
+    .withMountedCache("/assets", dag.cacheVolume("gl-release-assets"))
+    .withDirectory("/app", context)
+    .withWorkdir("/app")
+    .withExec([
+      "glab",
+      "auth",
+      "login",
+      "--token",
+      Deno.env.get("GITLAB_ACCESS_TOKEN") || token!,
+    ])
+    .withExec(["glab", "release", "upload", TAG, FILE]);
 
-    await ctr.stdout();
-  });
+  const result = await ctr.stdout();
 
-  return "Done";
+  return result;
 }
 
 export type JobExec = (
