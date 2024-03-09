@@ -1,3 +1,7 @@
+/**
+ * @module gitlab
+ * @description This module provides a set of functions to create and upload assets to a Gitlab Releases
+ */
 import { Directory, Secret, dag, env, exit } from "../../deps.ts";
 import { getDirectory, getGitlabToken } from "./lib.ts";
 
