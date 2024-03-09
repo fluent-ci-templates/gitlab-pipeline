@@ -1,4 +1,4 @@
-import { Directory, Secret, dag } from "../../deps.ts";
+import { Directory, Secret, dag, env, exit } from "../../deps.ts";
 import { getDirectory, getGitlabToken } from "./lib.ts";
 
 export enum Job {
@@ -9,6 +9,8 @@ export enum Job {
 export const exclude = [];
 
 /**
+ * Create a Gitlab Release
+ *
  * @function
  * @description Create a Gitlab Release
  * @param {string | Directory | undefined} src
@@ -20,12 +22,13 @@ export async function releaseCreate(
   token?: string | Secret,
   tag?: string
 ): Promise<string> {
-  const TAG = Deno.env.get("TAG") || tag || "latest";
-  const context = await getDirectory(dag, src);
-  const secret = await getGitlabToken(dag, token);
+  const TAG = env.get("TAG") || tag || "latest";
+  const context = await getDirectory(src);
+  const secret = await getGitlabToken(token);
   if (!secret) {
     console.error("No Gitlab token found");
-    Deno.exit(1);
+    exit(1);
+    return "";
   }
   const ctr = dag
     .pipeline(Job.releaseCreate)
@@ -41,12 +44,12 @@ export async function releaseCreate(
     .withExec(["bash", "-c", "glab auth login --token $GITLAB_ACCESS_TOKEN"])
     .withExec(["glab", "release", "create", TAG]);
 
-  const result = await ctr.stdout();
-
-  return result;
+  return ctr.stdout();
 }
 
 /**
+ * Upload asset files to a Gitlab Release
+ *
  * @function
  * @description Upload asset files to a Gitlab Release
  * @param {string | Directory | undefined} src
@@ -59,9 +62,9 @@ export async function releaseUpload(
   tag?: string,
   file?: string
 ): Promise<string> {
-  const TAG = Deno.env.get("TAG") || tag || "latest";
-  const FILE = Deno.env.get("FILE") || file!;
-  const context = await getDirectory(dag, src);
+  const TAG = env.get("TAG") || tag || "latest";
+  const FILE = env.get("FILE") || file!;
+  const context = await getDirectory(src);
   const ctr = dag
     .pipeline(Job.releaseUpload)
     .container()
@@ -77,13 +80,11 @@ export async function releaseUpload(
       "auth",
       "login",
       "--token",
-      Deno.env.get("GITLAB_ACCESS_TOKEN") || token!,
+      env.get("GITLAB_ACCESS_TOKEN") || token!,
     ])
     .withExec(["glab", "release", "upload", TAG, FILE]);
 
-  const result = await ctr.stdout();
-
-  return result;
+  return ctr.stdout();
 }
 
 export type JobExec = (

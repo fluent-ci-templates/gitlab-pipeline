@@ -1,7 +1,4 @@
-import {
-  releaseCreate,
-  releaseUpload,
-} from "https://pkg.fluentci.io/gitlab_pipeline@v0.3.1/mod.ts";
+import { releaseCreate, releaseUpload } from "jsr:@fluentci/gitlab";
 
 await releaseCreate();
 await releaseUpload();
