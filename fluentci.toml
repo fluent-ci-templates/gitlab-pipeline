@@ -1,0 +1,8 @@
+[package]
+authors = [
+  "Tsiry Sandratraina <tsiry.sndr@fluentci.io>",
+]
+description = "CI/CD Plugin for GitLab"
+license = "MIT"
+name = "gitlab"
+version = "0.5.0"
